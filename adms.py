@@ -171,8 +171,8 @@ MODEL_REGISTRY = {
 }
 
 
-def run_model(name: str, k: int = 10) -> list[str]:
-    applicants = load_applicants()
+def run_model(name: str, k: int = 10, path: Path | None = None) -> list[str]:
+    applicants = load_applicants(path or DATA_PATH)
     try:
         model = MODEL_REGISTRY[name]
     except KeyError as exc:
@@ -180,8 +180,8 @@ def run_model(name: str, k: int = 10) -> list[str]:
     return model(applicants, k=k)
 
 
-def run_all_models(k: int = 10) -> dict[str, list[str]]:
-    applicants = load_applicants()
+def run_all_models(k: int = 10, path: Path | None = None) -> dict[str, list[str]]:
+    applicants = load_applicants(path or DATA_PATH)
     return {name: model(applicants, k=k) for name, model in MODEL_REGISTRY.items()}
 
 

@@ -1,5 +1,6 @@
 import argparse
 import json
+from pathlib import Path
 
 import adms
 
@@ -17,12 +18,18 @@ def main() -> None:
         choices=sorted(adms.MODEL_REGISTRY.keys()),
         help="Run a single model instead of all models.",
     )
+    parser.add_argument(
+        "--input",
+        default=str(adms.DATA_PATH),
+        help="Path to the input JSON file.",
+    )
     args = parser.parse_args()
 
+    input_path = Path(args.input)
     if args.model:
-        output = {args.model: adms.run_model(args.model, k=args.k)}
+        output = {args.model: adms.run_model(args.model, k=args.k, path=input_path)}
     else:
-        output = adms.run_all_models(k=args.k)
+        output = adms.run_all_models(k=args.k, path=input_path)
     print(json.dumps(output, indent=2))
 
 
