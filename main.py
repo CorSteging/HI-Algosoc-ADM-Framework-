@@ -12,16 +12,17 @@ def main() -> None:
         default=10,
         help="Number of top applicants to return per model.",
     )
+    parser.add_argument(
+        "--model",
+        choices=sorted(adms.MODEL_REGISTRY.keys()),
+        help="Run a single model instead of all models.",
+    )
     args = parser.parse_args()
 
-    applicants = adms.load_applicants()
-    output = {
-        "model_1": adms.model_1(applicants, k=args.k),
-        "model_2": adms.model_2(applicants, k=args.k),
-        "model_3": adms.model_3(applicants, k=args.k),
-        "model_4": adms.model_4(applicants, k=args.k),
-        "model_5": adms.model_5(applicants, k=args.k),
-    }
+    if args.model:
+        output = {args.model: adms.run_model(args.model, k=args.k)}
+    else:
+        output = adms.run_all_models(k=args.k)
     print(json.dumps(output, indent=2))
 
 

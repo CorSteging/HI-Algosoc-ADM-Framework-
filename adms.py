@@ -162,15 +162,31 @@ def model_5(applicants: list[dict], k: int = 10) -> list[str]:
     return [a["name"] for a in ranked[:k]]
 
 
-def main() -> None:
+MODEL_REGISTRY = {
+    "model_1": model_1,
+    "model_2": model_2,
+    "model_3": model_3,
+    "model_4": model_4,
+    "model_5": model_5,
+}
+
+
+def run_model(name: str, k: int = 10) -> list[str]:
     applicants = load_applicants()
-    output = {
-        "model_1": model_1(applicants),
-        "model_2": model_2(applicants),
-        "model_3": model_3(applicants),
-        "model_4": model_4(applicants),
-        "model_5": model_5(applicants),
-    }
+    try:
+        model = MODEL_REGISTRY[name]
+    except KeyError as exc:
+        raise ValueError(f"Unknown model '{name}'.") from exc
+    return model(applicants, k=k)
+
+
+def run_all_models(k: int = 10) -> dict[str, list[str]]:
+    applicants = load_applicants()
+    return {name: model(applicants, k=k) for name, model in MODEL_REGISTRY.items()}
+
+
+def main() -> None:
+    output = run_all_models()
     print(json.dumps(output, indent=2))
 
 
