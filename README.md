@@ -2,6 +2,11 @@
 
 ## Running
 
+Run the dashboard:
+```powershell
+python dashboard.py
+```
+
 Run all models:
 ```powershell
 python main.py --k 10
